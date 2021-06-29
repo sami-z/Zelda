@@ -11,7 +11,7 @@ const playerSpeed = 100
 const bossSpeed = 120
 
 let numLives = 3
-let livesLost = false
+//let livesLost = false
 
 //Load sprite assets 35x48
 loadSprite("LinkGoingRight", "Sprites/LinkGoingRight.png")
@@ -28,7 +28,12 @@ loadSprite("lives", "Sprites/Lives.png")
 loadSprite("hole", "Sprites/Hole.png")
 loadSprite("hole2", "Sprites/Hole2.png")
 
+//Load audio assets
+loadSound("cave", "Sounds/Cave.mp3")
+loadSound("intro", "Sounds/Intro.mp3")
 
+//Load start screen
+loadSprite("startScreen", "ZeldaHomeScreenGood.png")
 
 
 scene('game', (
@@ -77,6 +82,8 @@ scene('game', (
     const life1 = add([sprite("lives"), pos(600, 535)])
     const life2 = add([sprite("lives"), pos(630, 535)])
     const life3 = add([sprite("lives"), pos(660, 535)])
+    const caveMusic = play("cave", {loop: true,})
+    caveMusic.volume(0.1)
 
     //Player movements & sprite change
 
@@ -105,6 +112,7 @@ scene('game', (
 
         
         if (numLives == 0){
+            caveMusic.stop()
             go("gameOver", {score: scoreLabel.value})
         }
         
@@ -157,15 +165,31 @@ scene('game', (
 //CALL RESET FUNCTION IN GAME OVER SCENE TO REST VALUES
 //Game over scene
  scene("gameOver", ({score}) => {
+
     add([text("Game Over!", 32), origin("center"), pos(width()/2, height()/2)])
     add([text("Final Score:" + score, 32), origin("center"), pos(width()/2, height()/2 + 50)])
     keyPress("enter", () => {
 		go("game",{ level: 0, score: 0});
+        numLives = 3
 	});
 })
 
 
+//Start screen scene
+scene("start", () => {
+    const introMusic = play("intro", {loop: true,})
+    introMusic.volume(0.1)
+    add([sprite("startScreen")])
+    keyDown("enter", () =>{
+        go('game', { level: 0, score: 0})
+        introMusic.stop()
+    })
 
-start('game', { level: 0, score: 0})
+
+})
+
+
+
+start('start', { level: 0, score: 0})
 
 
