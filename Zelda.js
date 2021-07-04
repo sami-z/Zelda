@@ -20,6 +20,23 @@ loadSprite("LinkGoingUp", "Sprites/LinkGoingUp.png")
 loadSprite("LinkGoingDown", "Sprites/LinkGoingDown.png")
 
 
+loadSprite("LinkRunLeft", "Sprites/LinkRunLeft.png", {
+    sliceX: 8,
+    anims: {
+        runLeft: {from: 0, to: 7},
+        idleLeft: {from: 6, to: 6}
+    }
+})
+
+loadSprite("LinkRunRight", "Sprites/LinkRunRight.png", {
+    sliceX: 8,
+    anims: {
+        runRight: {from: 0, to: 7},
+        idleRight: {from: 1, to: 1}
+    }
+})
+
+
 loadSprite("boss1", "Sprites/Lvl1Boss1.png")
 loadSprite("Lvl1Wall", "Sprites/Wall.png")
 loadSprite("bg", "Sprites/LVL1BG.png")
@@ -33,7 +50,7 @@ loadSound("cave", "Sounds/Cave.mp3")
 loadSound("intro", "Sounds/Intro.mp3")
 
 //Load start screen
-loadSprite("startScreen", "ZeldaHomeScreenGood.png")
+loadSprite("startScreen", "HomeScreen.png")
 
 
 scene('game', (
@@ -86,9 +103,8 @@ scene('game', (
     caveMusic.volume(0.1)
 
     //Player movements & sprite change
-
-    
-    const player = add([sprite("LinkGoingRight"), pos(10, 260)])
+  
+    const player = add([sprite("LinkGoingRight"), scale(1), pos(10, 260)])
 
 
     function respawn(){
@@ -125,15 +141,51 @@ scene('game', (
         player.resolve()
     })
 
+    keyPress("left", () =>  {
+       // player.scale.x = 1
+        player.changeSprite("LinkRunLeft")
+        player.play("runLeft")
+    })
+
+    
     keyDown("left", () =>  {
-        player.changeSprite("LinkGoingLeft")
         player.move(-playerSpeed, 0)
     })
 
+
+     keyRelease("left", () => {
+        player.play("idleLeft")
+     })
+
+
+    //-----------------------------------------------
+
+    // keyDown("right", () =>  {
+    //     player.changeSprite("LinkGoingRight")
+    //     player.move(playerSpeed, 0)
+    // })
+
+    
+    keyPress("right", () =>  {
+        //player.scale.x = -1
+        player.changeSprite("LinkRunRight")
+        player.play("runRight")
+    })
+
+    
     keyDown("right", () =>  {
-        player.changeSprite("LinkGoingRight")
         player.move(playerSpeed, 0)
     })
+
+
+     keyRelease("right", () => {
+        //player.scale.x = 1
+        player.play("idleRight") 
+     })
+
+
+
+    //-----------------------------------------------
 
     keyDown("up", () =>  {
         player.changeSprite("LinkGoingUp")
@@ -178,8 +230,20 @@ scene('game', (
 //Start screen scene
 scene("start", () => {
     const introMusic = play("intro", {loop: true,})
+    const introText = add([text("Press Enter to start", 32), origin("center"), pos(width()/2 + 25, height()/2 + 300), color(1,0,0)]) 
     introMusic.volume(0.1)
-    add([sprite("startScreen")])
+    add([sprite("startScreen"), pos(width()/8, height()/10)])
+
+
+    introText.action(() => {
+        loop(4, () => {
+            add([text("Press Enter to start", 32), origin("center"), pos(width()/2 + 25, height()/2 + 300), color(0,0,0)])
+
+        })         
+    
+
+    })
+    
     keyDown("enter", () =>{
         go('game', { level: 0, score: 0})
         introMusic.stop()
