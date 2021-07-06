@@ -18,21 +18,21 @@ loadSprite("LinkGoingRight", "Sprites/LinkGoingRight.png")
 loadSprite("LinkGoingLeft", "Sprites/LinkGoingLeft.png")
 loadSprite("LinkGoingUp", "Sprites/LinkGoingUp.png")
 loadSprite("LinkGoingDown", "Sprites/LinkGoingDown.png")
+loadSprite("LinkStopRight", "Sprites/LinkStopRight.png")
+loadSprite("LinkStopLeft", "Sprites/LinkStopLeft.png")
 
 
 loadSprite("LinkRunLeft", "Sprites/LinkRunLeft.png", {
     sliceX: 8,
     anims: {
-        runLeft: {from: 0, to: 7},
-        idleLeft: {from: 6, to: 6}
+        runLeft: {from: 0, to: 7}
     }
 })
 
 loadSprite("LinkRunRight", "Sprites/LinkRunRight.png", {
     sliceX: 8,
     anims: {
-        runRight: {from: 0, to: 7},
-        idleRight: {from: 1, to: 1}
+        runRight: {from: 0, to: 7}
     }
 })
 
@@ -154,7 +154,7 @@ scene('game', (
 
 
      keyRelease("left", () => {
-        player.play("idleLeft")
+        player.changeSprite("LinkStopLeft")
      })
 
 
@@ -180,7 +180,7 @@ scene('game', (
 
      keyRelease("right", () => {
         //player.scale.x = 1
-        player.play("idleRight") 
+        player.changeSprite("LinkStopRight")
      })
 
 
